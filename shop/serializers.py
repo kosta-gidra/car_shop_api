@@ -48,7 +48,6 @@ class ColorSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    quantity = serializers.IntegerField(min_value=1)
 
     class Meta:
         model = Order

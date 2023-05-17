@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
 
@@ -39,7 +40,7 @@ class Color(models.Model):
 class Order(models.Model):
     color = models.ForeignKey(Color, verbose_name='Цвет', related_name='orders', on_delete=models.CASCADE)
     model = models.ForeignKey(CarModel, verbose_name='Модель', related_name='orders', on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(verbose_name='Количество')
+    quantity = models.PositiveIntegerField(verbose_name='Количество', validators=[MinValueValidator(1)])
     dt = models.DateTimeField(default=timezone.now)
 
     class Meta:
