@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+
+  shop_pg_db:
+    image: postgres:14.3-alpine3.15
+    container_name: shop_pg_db
+    ports:
+      - "5431:5432"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: shop_base
+    volumes:
+      - ./logs:/var/log
+
+#  app:
+#    build: .
+#    image: dj_api_diplom:latest
+#    container_name: app
+#    ports:
+#      - "8000:8000"
+#    env_file:
+#      - .env
+#    depends_on:
+#      - redis
+#    volumes:
+#      - .:/app
+#      - static_volume:/app/static
+#      - media_volume:/app/media
+#    command: [sh, -c, "celery -A dj_api_diplom worker -D  &&
+#    python manage.py collectstatic --noinput &&
+#    python manage.py migrate && gunicorn dj_api_diplom.wsgi:application -b 0.0.0.0:8000"]
+
+volumes:
+  static_volume:
+  media_volume:
