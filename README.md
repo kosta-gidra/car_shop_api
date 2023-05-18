@@ -39,3 +39,8 @@ docker-compose up
 ```bash
 docker exec -it app python manage.py createsuperuser
 ```
+
+Запуск тестов:
+```bash
+docker exec app pytest
+```
