@@ -74,14 +74,7 @@ class ColorInformView(APIView):
     """Класс для вывода списка цветов с указанием количества заказанных авто каждого цвета"""
 
     def get(self, request, *args, **kwargs):
-        orders = Order.objects.all()
-        result = {}
-        for order in orders:
-            if order.color.name not in result:
-                result[order.color.name] = order.quantity
-            else:
-                result[order.color.name] = result[order.color.name] + order.quantity
-
+        result = Order.show_colors()
         return JsonResponse(result)
 
 
@@ -89,12 +82,5 @@ class BrandInformView(APIView):
     """Класс для вывода списка марок с указанием количества заказанных авто каждой марки"""
 
     def get(self, request, *args, **kwargs):
-        orders = Order.objects.all()
-        result = {}
-        for order in orders:
-            if order.model.brand.name not in result:
-                result[order.model.brand.name] = order.quantity
-            else:
-                result[order.model.brand.name] = result[order.model.brand.name] + order.quantity
-
+        result = Order.show_brands()
         return JsonResponse(result)
