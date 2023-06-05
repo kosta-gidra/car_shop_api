@@ -51,23 +51,17 @@ class OrderView(ModelViewSet):
     filterset_fields = ['model__brand']
     ordering_fields = ['quantity']
 
-    # заменил сериалайзер в методах list и retrieve, чтобы получать расширенную информацию по заказам
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = FullOrderSerializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = FullOrderSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = FullOrderSerializer(instance)
-        return Response(serializer.data)
+    # заменил сериалайзер при отправке 'GET' запроса , чтобы получать расширенную информацию по заказам
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return FullOrderSerializer
+        else:
+            assert self.serializer_class is not None, (
+                    "'%s' should either include a `serializer_class` attribute, "
+                    "or override the `get_serializer_class()` method."
+                    % self.__class__.__name__
+            )
+            return self.serializer_class
 
 
 class ColorInformView(APIView):
