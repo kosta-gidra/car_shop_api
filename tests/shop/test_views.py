@@ -93,9 +93,13 @@ def test_order(client, create_model):
 def test_color_inform(client, create_orders):
     """Тест вывода списка цветов с указанием количества заказанных авто каждого цвета"""
 
-    response = client.get('/api/color/inform/')
+    response = client.get('/api/color_inform/')
+    response_data = response.json()
 
-    data = response.json()
+    data = {}
+    for color in response_data:
+        data[color['color']] = color['total_quantity']
+
     assert data['red'] == 10
     assert data['blue'] == 7
     assert response.status_code == 200
@@ -105,9 +109,13 @@ def test_color_inform(client, create_orders):
 def test_brand_inform(client, create_orders):
     """Тест вывода списка марок с указанием количества заказанных авто каждой марки"""
 
-    response = client.get('/api/brand/inform/')
+    response = client.get(f'/api/brand_inform/')
+    response_data = response.json()
 
-    data = response.json()
+    data = {}
+    for brand in response_data:
+        data[brand['name']] = brand['total_quantity']
+
     assert data['Subaru'] == 14
     assert data['Honda'] == 3
     assert response.status_code == 200

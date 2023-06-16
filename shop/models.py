@@ -49,29 +49,3 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.dt)
-
-    @classmethod
-    def show_brands(cls):
-        """Метод для вывода словаря, содержащего мароки, с указанием количества заказанных авто каждой марки"""
-
-        orders = cls.objects.all()
-        result = {}
-        for order in orders:
-            if order.model.brand.name not in result:
-                result[order.model.brand.name] = order.quantity
-            else:
-                result[order.model.brand.name] = result[order.model.brand.name] + order.quantity
-        return result
-
-    @classmethod
-    def show_colors(cls):
-        """Метод для вывода словаря, содержащего цвета, с указанием количества заказанных авто каждого цвета"""
-
-        orders = cls.objects.all()
-        result = {}
-        for order in orders:
-            if order.color.name not in result:
-                result[order.color.name] = order.quantity
-            else:
-                result[order.color.name] = result[order.color.name] + order.quantity
-        return result

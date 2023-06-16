@@ -13,8 +13,7 @@ class CarModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CarModel
-        fields = ['id', 'name', 'brand']
-        read_only_fields = ['id']
+        fields = ('id', 'name', 'brand')
 
 
 class FullCarBrandSerializer(CarBrandSerializer):
@@ -43,18 +42,29 @@ class ColorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Color
-        fields = ['id', 'name']
-        read_only_fields = ['id']
+        fields = ('id', 'name')
 
 
 class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['id', 'dt', 'color', 'model', 'quantity']
-        read_only_fields = ['id']
+        fields = ('id', 'dt', 'color', 'model', 'quantity')
 
 
 class FullOrderSerializer(OrderSerializer):
     model = FullCarModelSerializer(read_only=True)
     color = ColorSerializer(read_only=True)
+
+
+class ColorWithCountSerializer(ColorSerializer):
+    total_quantity = serializers.IntegerField(source='quantity', read_only=True)
+    # color_id = serializers.IntegerField(source='id')
+    color = serializers.CharField(source='name')
+
+    class Meta(ColorSerializer.Meta):
+        fields = ('color', 'total_quantity')
+
+
+class CarBrandWithCountSerializer(CarBrandSerializer):
+    total_quantity = serializers.IntegerField(source='quantity', read_only=True)

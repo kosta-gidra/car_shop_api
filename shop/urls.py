@@ -8,8 +8,7 @@ router.register('brand', CarBrandView)
 router.register('model', CarModelView)
 router.register('color', ColorView)
 router.register('order', OrderView)
+router.register('color_inform', ColorInformView)
+router.register('brand_inform', BrandInformView)
 
-urlpatterns = [
-    path('color/inform/', ColorInformView.as_view(), name='color_inform'),
-    path('brand/inform/', BrandInformView.as_view(), name='brand_inform'),
-] + router.urls
+urlpatterns = router.urls

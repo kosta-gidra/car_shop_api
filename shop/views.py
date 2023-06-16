@@ -1,14 +1,12 @@
-from django.http import JsonResponse
+from django.db.models import Sum
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from shop.models import CarBrand, CarModel, Color, Order
 from shop.serializers import ColorSerializer, OrderSerializer, FullCarBrandSerializer, \
-    FullOrderSerializer, CarModelSerializer
+    FullOrderSerializer, CarModelSerializer, ColorWithCountSerializer, CarBrandWithCountSerializer
 
 
 class OrderPagination(PageNumberPagination):
@@ -64,17 +62,15 @@ class OrderView(ModelViewSet):
             return self.serializer_class
 
 
-class ColorInformView(APIView):
+class ColorInformView(ReadOnlyModelViewSet):
     """Класс для вывода списка цветов с указанием количества заказанных авто каждого цвета"""
 
-    def get(self, request, *args, **kwargs):
-        result = Order.show_colors()
-        return JsonResponse(result)
+    queryset = Color.objects.annotate(quantity=Sum('orders__quantity')).order_by('id')
+    serializer_class = ColorWithCountSerializer
 
 
-class BrandInformView(APIView):
+class BrandInformView(ReadOnlyModelViewSet):
     """Класс для вывода списка марок с указанием количества заказанных авто каждой марки"""
 
-    def get(self, request, *args, **kwargs):
-        result = Order.show_brands()
-        return JsonResponse(result)
+    queryset = CarBrand.objects.annotate(quantity=Sum('models__orders__quantity')).order_by('id')
+    serializer_class = CarBrandWithCountSerializer
